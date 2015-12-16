@@ -127,13 +127,13 @@ var getInspiration = function(answerers) {
 		type: "GET",
 	})
 	.done(function(result){ //this waits for the ajax to return with a succesful promise object
-		var searchResults = showSearchResults(request.answerers, result.items.length);
+		var searchResults = showSearchResults(request.tag, result.items.length);
 
 		$('.search-results').html(searchResults);
 		//$.each is a higher order function. It takes an array and a function as an argument.
 		//The function is executed once for each item in the array.
 		$.each(result.items, function(i, item) {
-			var answerer = showQuestion(item);
+			var answerer = showAnswer(item);
 			$('.results').append(answerer);
 		});
 	})
