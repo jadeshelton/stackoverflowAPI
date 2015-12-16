@@ -29,43 +29,45 @@ var showQuestion = function(question) {
 	);
 
 	return result;
+	console.log(result);
 };
 
 
-// this function takes the question object returned by the StackOverflow request
+// this function takes the answerer object returned by the StackOverflow request
 // and returns new result to be appended to DOM
 var showAnswer = function(answerer) {
 	
 	// clone our result template code
 	var result = $('.templates .answerer').clone();
 	
-	// Set the answerer properties in result
-	var answererElem = result.find('.answerer-text a');
-	answererElem.attr('href', answerer.link);
-	answererElem.text(answerer.display_name);
+	// Set the link to user properties in result
+	var answererLink = result.find('.answerer-link a');
+	answererLink.attr('href', answerer.user.link);
+	answererLink.text(answerer.user.display_name);
 
-	// set the date asked property in result
+	// set the post count property in result
 	var postCount = result.find('.post-count');
 	postCount.text(answerer.post_count);
 
-	// set the .viewed for question property in result
+	// set the answerer score property in result
 	var score = result.find('.score');
 	score.text(answerer.score);
 
-	// set some properties related to asker
+	// set some properties related to answerer
 	var userId = result.find('.user-ID');
-	userId.text(answerer.user_id);
-
+	userId.text(answerer.user.user_id);
 
 	return result;
+	console.log(result);
 };
 
 
 // this function takes the results object from StackOverflow
 // and returns the number of results and tags to be appended to DOM
 var showSearchResults = function(query, resultNum) {
-	var results = 	 + ' results for <strong>' + query + '</strong>';
+	var results = 	resultNum + ' results for <strong>' + query + '</strong>';
 	return results;
+	console.log(results);
 };
 
 // takes error string and turns it into displayable DOM element
@@ -102,6 +104,7 @@ var getUnanswered = function(tags) {
 		$.each(result.items, function(i, item) {
 			var question = showQuestion(item);
 			$('.results').append(question);
+			console.log(result.items);
 		});
 	})
 	.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
@@ -135,6 +138,7 @@ var getInspiration = function(answerers) {
 		$.each(result.items, function(i, item) {
 			var answerer = showAnswer(item);
 			$('.results').append(answerer);
+			console.log(result.items);
 		});
 	})
 	.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
@@ -156,7 +160,9 @@ $(document).ready( function() {
 
 	$('.inspiration-getter').submit(function(e) {
 		e.preventDefault();
+		// zero out results if previous search has run
 		$('.results').html('');
+		// get the value of the tags the user submitted
 		var answerers = $(this).find("input[name='answerers']").val();
 		getInspiration(answerers);
 	});
